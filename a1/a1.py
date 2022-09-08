@@ -2,18 +2,24 @@
 
 import sys
 
+N = 2
+
 if len(sys.argv) < 2:
 	print(f'usage: {sys.argv[0]} <filename>')
 	exit(1)
 
-counts = {}
+counts = [{} for i in range(N)]
 
 with open(sys.argv[1]) as f:
 	for line in f.readlines():
-		for word in line.split(' '):
-			if word in counts:
-				counts[word] += 1
-			else:
-				counts[word] = 1
+		words = line.split(' ')
+
+		for n in range(len(counts)):
+			for i in range(len(words) - n):
+				ngram = ' '.join(words[i:i + n + 1])
+				if ngram in counts[n]:
+					counts[n][ngram] += 1
+				else:
+					counts[n][ngram] = 1
 
 print(counts)
