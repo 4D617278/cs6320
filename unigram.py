@@ -35,5 +35,6 @@ def main():
         print('only input 1 word')
     else:
         test_word = test_word[0]
-        print('P(%s):' % test_word, unigram.probability(test_word))
+        print('P(%s):' % (test_word), unigram.probability(test_word))
+    return
 main()

@@ -8,7 +8,7 @@ class Bigram():
             self.root[previous].total += 1
         else:
             self.root[previous].total += 1
-        if current not in self.root[previous]:
+        if current not in self.root[previous].branches:
             self.root[previous].branches[current] = 1
         else:
             self.root[previous].branches[current] += 1
@@ -27,7 +27,7 @@ class Bigram():
 class node():
     def __init__(self):
         self.total = 0
-        branches = {}
+        self.branches = {}
 
 def preprocessing(training_set):
     file = 'a1/A1/A1_DATASET/train/{training_set}.txt'.format(training_set = training_set)
@@ -41,15 +41,25 @@ def preprocessing(training_set):
     return
 
 def train(bigram):
-    
-    bigram = Bigram()
-    with open('a1/A1/A1_DATASET/train/truthful.txt') as f:
+
+    with open('a1/A1/A1_DATASET/train/truthful_processed.txt') as f:
         for line in f.readlines():
             words = line.split()
-
+            for i in range(1, len(words)):
+                bigram.insert(words[i-1], words[i])
     return
 
-preprocessing('deceptive')
-preprocessing('truthful')
+def main():
+    preprocessing('deceptive')
+    preprocessing('truthful')
+    bigram = Bigram()
+    train(bigram)
+    print('Enter test words')
+    test_words = input().split()
+    if len(test_words) != 2:
+        print('input 2 words')
+    else:
+        print('P(%s | %s):' % (test_words[0], test_words[1]), bigram.probability(test_words[0], test_words[1]))
+    return
 
-think = "<s> I booked two rooms four months in advance at the Talbott . We were placed on the top floor next to the elevators , which are used all night long . When speaking to the front desk , I was told that they were simply honoring my request for an upper floor , which I had requested for a better view . I am looking at a brick wall , and getting no sleep . He also told me that they had received complaints before from guests on the 16th floor , and were aware of the noise problem . Why then did they place us on this floor when the hotel is not totally booked ? A request for an upper floor does not constitute placing someone on the TOP floor and using that request to justify this . If you decide to stay here , request a room on a lower floor and away from the elevator ! I spoke at length when booking my two rooms about my preferences . This is simply poor treatment of a guest whom they believed would not complain . <stop>"
+main()
