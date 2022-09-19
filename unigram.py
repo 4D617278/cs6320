@@ -1,7 +1,10 @@
+import numpy as np
+
 class Unigram:
     def __init__(self):
         self.unigram = {}
         self.total = 0
+        self.vocabulary = 0
 
     def insert(self, word):
         if word in self.unigram:
@@ -10,6 +13,7 @@ class Unigram:
         else:
             self.unigram[word] = 1
             self.total += 1
+            self.vocabulary += 1
     
     def probability(self, word):
         if word not in self.unigram:
@@ -29,6 +33,7 @@ def train(unigram):
 def main():
     unigram = Unigram()
     train(unigram)
+    print('vocab:', unigram.vocabulary)
     print('Enter test word')
     test_word = input().split()
     if len(test_word) != 1:

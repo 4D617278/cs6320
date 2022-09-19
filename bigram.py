@@ -1,9 +1,11 @@
 class Bigram():
     def __init__(self):
         self.root = {}
+        self.vocabulary = 0
     
     def insert(self, previous, current):
         if previous not in self.root:
+            self.vocabulary += 1
             self.root[previous] = node()
             self.root[previous].total += 1
         else:
@@ -24,6 +26,25 @@ class Bigram():
 
         return probability
 
+    def laplace(self, previous, next):
+        probability = 0
+        if previous not in self.root:
+            previous = '<unknown>'
+        if next not in self.root[previous].branches:
+            next = '<unknown>'
+        probability = (self.root[previous].branches[next] + 1) / (self.root[previous].total + self.vocabulary)
+
+        return probability
+
+    def add_k(self, k, previous, next):
+        probability = 0
+        if previous not in self.root:
+            previous = '<unknown>'
+        if next not in self.root[previous].branches:
+            next = '<unknown>'
+        probability = (self.root[previous].branches[next] + k) / (self.root[previous].total + (self.vocabulary*k))
+        return probability
+
 class node():
     def __init__(self):
         self.total = 0
@@ -34,7 +55,7 @@ def preprocessing(training_set):
     processed_file = 'a1/A1/A1_DATASET/train/{training_set}_processed.txt'.format(training_set = training_set)
     with open(file, 'r') as f:
         lines = f.readlines()
-    lines = ['<s> ' + line + '<stop>' for line in lines]
+    lines = ['<s> ' + line for line in lines]
     with open(processed_file, 'w') as f:
         f.writelines(lines)
 
@@ -54,12 +75,14 @@ def main():
     preprocessing('truthful')
     bigram = Bigram()
     train(bigram)
-    print('Enter test words')
+    print('vocab:', bigram.vocabulary)
+    print('Enter two words separated by spaces')
     test_words = input().split()
     if len(test_words) != 2:
         print('input 2 words')
     else:
-        print('P(%s | %s):' % (test_words[0], test_words[1]), bigram.probability(test_words[0], test_words[1]))
+        print('original P(%s|%s):' % (test_words[0], test_words[1]), bigram.probability(test_words[0], test_words[1]))
+        print('laplace smoothing P(%s|%s):' % (test_words[0], test_words[1]), bigram.laplace(test_words[0], test_words[1]))
     return
 
 main()
