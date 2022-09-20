@@ -9,6 +9,7 @@ if len(sys.argv) < 2:
 	exit(1)
 
 counts = [{} for i in range(N)]
+probs = [{} for i in range(N)]
 
 with open(sys.argv[1]) as f:
 	for line in f.readlines():
@@ -22,4 +23,10 @@ with open(sys.argv[1]) as f:
 				else:
 					counts[n][ngram] = 1
 
-print(counts)
+# print(counts)
+
+for i in range(len(counts)):
+	for ngram in counts[i]:
+		probs[i][ngram] = counts[i][ngram] / len(counts[i])
+
+print(probs)
