@@ -83,13 +83,15 @@ def perplexity(ngram, words):
 def test(ngrams, testFile, labelFile):
     with open(testFile, 'r', errors='replace') as f:
         tests = f.read().splitlines()
+
     with open(labelFile, 'r', errors='replace') as f:
         labels = f.read().splitlines()
 
     sum = 0
     for i in range(len(tests)):
         outputs = [perplexity(ngrams[c], tests[i]) for c in Class]
-        sum += (labels[i] == outputs.index(min(outputs)))
+        # print(f'{labels[i]} {outputs} {min(outputs)}')
+        sum += (int(labels[i]) == outputs.index(min(outputs)))
 
     print(sum / len(tests))
      
