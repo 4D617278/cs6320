@@ -51,8 +51,8 @@ class node():
         self.branches = {}
 
 def preprocessing(training_set):
-    file = 'a1/A1/A1_DATASET/train/{training_set}.txt'.format(training_set = training_set)
-    processed_file = 'a1/A1/A1_DATASET/train/{training_set}_processed.txt'.format(training_set = training_set)
+    file = 'A1/A1_DATASET/train/{training_set}.txt'.format(training_set = training_set)
+    processed_file = 'A1/A1_DATASET/train/{training_set}_processed.txt'.format(training_set = training_set)
     with open(file, 'r') as f:
         lines = f.readlines()
     lines = ['<s> ' + line for line in lines]
@@ -63,7 +63,13 @@ def preprocessing(training_set):
 
 def train(bigram):
 
-    with open('a1/A1/A1_DATASET/train/truthful_processed.txt') as f:
+    with open('A1/A1_DATASET/train/truthful_processed.txt') as f:
+        for line in f.readlines():
+            words = line.split()
+            for i in range(1, len(words)):
+                bigram.insert(words[i-1], words[i])
+
+    with open('A1/A1_DATASET/train/deceptive_unknown_processed.txt') as f:
         for line in f.readlines():
             words = line.split()
             for i in range(1, len(words)):
@@ -71,7 +77,7 @@ def train(bigram):
     return
 
 def main():
-    preprocessing('deceptive')
+    preprocessing('deceptive_unknown')
     preprocessing('truthful')
     bigram = Bigram()
     train(bigram)
@@ -83,6 +89,7 @@ def main():
     else:
         print('original P(%s|%s):' % (test_words[0], test_words[1]), bigram.probability(test_words[0], test_words[1]))
         print('laplace smoothing P(%s|%s):' % (test_words[0], test_words[1]), bigram.laplace(test_words[0], test_words[1]))
+        print('add 5 smoothing P(%s|%s):' % (test_words[0], test_words[1]), bigram.add_k(5 ,test_words[0], test_words[1]))
     return
 
 main()
