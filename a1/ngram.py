@@ -78,7 +78,7 @@ def perplexity(ngram, file):
     sum = 0
 
     for i in range(1, len(words)):
-        sum += log(ngram.prob(words[i - 1], words[i]))
+        sum -= log(ngram.prob(words[i - 1], words[i]))
 
     print(e ** (sum / len(words)))
 
