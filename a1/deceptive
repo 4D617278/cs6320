@@ -1,3 +1,4 @@
 ./A1_DATASET/train/deceptive.txt
 ./A1_DATASET/validation/deceptive.txt
 ./A1_DATASET/test/test.txt
+./A1_DATASET/test/test_labels.txt

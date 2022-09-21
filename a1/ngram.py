@@ -14,6 +14,7 @@ class Use(IntEnum):
         train = 0
         validate = 1
         test = 2
+        label = 3
 
 class Ngram():
     def __init__(self):
@@ -68,10 +69,7 @@ def train(ngram, file):
         for i in range(1, len(words)):
             ngram.insert(words[i - 1], words[i])
 
-def perplexity(ngram, file):
-    with open(file, 'r', errors='replace') as f:
-        words = f.read().split(' ')
-
+def perplexity(ngram, words):
     for i in range(1, len(words)):
         ngram.insert(words[i - 1], words[i])
 
@@ -80,10 +78,21 @@ def perplexity(ngram, file):
     for i in range(1, len(words)):
         sum -= log(ngram.prob(words[i - 1], words[i]))
 
-    print(e ** (sum / len(words)))
+    return e ** (sum / len(words))
 
-def test(ngram, file):
-    pass
+def test(ngrams, testFile, labelFile):
+    with open(testFile, 'r', errors='replace') as f:
+        tests = f.read().splitlines()
+    with open(labelFile, 'r', errors='replace') as f:
+        labels = f.read().splitlines()
+
+    sum = 0
+    for i in range(len(tests)):
+        outputs = [perplexity(ngrams[c], tests[i]) for c in Class]
+        sum += (labels[i] == outputs.index(min(outputs)))
+
+    print(sum / len(tests))
+     
 
 START_INDEX = 1
 
@@ -107,8 +116,11 @@ def main():
             exit(1)
 
         train(ngrams[c], files[Use.train])
-        perplexity(ngrams[c], files[Use.validate])
-        test(ngrams[c], files[Use.test])
+
+        with open(files[Use.validate], 'r', errors='replace') as f:
+            words = f.read().split(' ')
+        print(f'Perplexity: {perplexity(ngrams[c], words)}')
+        test(ngrams, files[Use.test], files[Use.label])
 
 if __name__ == '__main__':
         main()
