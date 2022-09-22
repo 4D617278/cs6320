@@ -70,9 +70,6 @@ def train(ngram, file):
             ngram.insert(words[i - 1], words[i])
 
 def perplexity(ngram, words):
-    for i in range(1, len(words)):
-        ngram.insert(words[i - 1], words[i])
-
     sum = 0
 
     for i in range(1, len(words)):
