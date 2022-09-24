@@ -174,9 +174,9 @@ def main():
     train(bigram_deceptive2, 'A1/A1_DATASET/train/deceptive_unknown2.txt')
     
     print('test unknown implementation 1 on validation set:')
-    add_k_test(bigram_truthful1, bigram_deceptive1, 0.00001)
+    add_k_test(bigram_truthful1, bigram_deceptive1, 1)
     print('test unknown implementation 2 on validation set:')
-    add_k_test(bigram_truthful1, bigram_deceptive2, 0.00005)
+    add_k_test(bigram_truthful1, bigram_deceptive2, 1)
     
     print('final test on 1:')
     test(bigram_truthful1, bigram_deceptive1, 0.001)
