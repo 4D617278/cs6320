@@ -104,15 +104,25 @@ def test(ngrams, tests, labels, N, r):
     print(f'Correct: {sum}')
      
 
-START_INDEX = 1
+START_INDEX = 2
 
 N = 2 # unigram, bigram
 
 def main():
     if len(argv) < START_INDEX + len(Class):
             args = ' '.join(c.name for c in Class)
-            print(f'usage: {argv[0]} {args}')
+            print(f'usage: {argv[0]} <smoothing> {args}')
             exit(1)
+
+    try:
+        smooth = float(argv[1])
+    except ValueError:
+        print('smoothing parameter must be nonnegative real')
+        exit(1)
+
+    if smooth < 0:
+        print('smoothing parameter must be nonnegative real')
+        exit(1)
 
     files = [None] * len(Use)
     ngrams = [[Ngram() for c in Class] for l in range(N)]
@@ -137,11 +147,11 @@ def main():
 
         for l in range(N):
             train(ngrams[l][c], sets[Use.train], l + 1)
-            prplxty = perplexity(ngrams[l][c], sets[Use.validate], l + 1, 0.1)
+            prplxty = perplexity(ngrams[l][c], sets[Use.validate], l + 1, smooth)
             print(f'Class: {c.name}, Length: {l + 1}, Perplexity: {prplxty}')
 
     for l in range(N):
-        test(ngrams[l], sets[Use.test], sets[Use.label], l + 1, 0.1)
+        test(ngrams[l], sets[Use.test], sets[Use.label], l + 1, smooth)
 
 if __name__ == '__main__':
         main()
